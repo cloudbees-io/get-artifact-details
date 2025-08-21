@@ -1,1 +1,73 @@
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: action
+name: 'Get Artifact Details'
+description: 'Get artifact version details.'
 
+inputs:
+  artifact-id:
+    description: "The unique identifier of the artifact."
+    required: true
+
+outputs:
+  name:
+    value: ${{ steps.getArtifactDetails.outputs.name }}
+    description: 'The name of the artifact.'
+  version:
+    value: ${{ steps.getArtifactDetails.outputs.version }}
+    description: 'The version of the artifact.'
+  url:
+    value: ${{ steps.getArtifactDetails.outputs.url }}
+    description: 'The url where the artifact version is located.'
+  digest:
+    value: ${{ steps.getArtifactDetails.outputs.digest }}
+    description: 'The artifact digest that uniquely and immutably identifies the artifact.'
+
+runs:
+  using: composite
+  steps:
+    - id: getArtifactDetails
+      name: Get Artifact Details
+      uses: docker://esolang/jq:latest
+      run: |
+        # Create the payload JSON file
+        echo '{ "artifactId": "'"$INPUT_ARTIFACT_ID"'" }' > /tmp/payload.json 
+
+        # Display the generated payload
+        echo "Request payload:"
+        python3 -m json.tool /tmp/payload.json
+        
+        # Make Platform API call to get artifact details
+        response=$(curl --silent --show-error --fail-with-body \
+          -X 'POST' "$URL/v3/artifactinfos/$INPUT_ARTIFACT_ID" \
+          -H "Authorization: Bearer $JWT" \
+          -H 'Content-Type: application/json' \
+          --data-binary '@/tmp/payload.json') || command_failed=1
+        
+        # Check if the API call failed
+        if [ ${command_failed:-0} -eq 1 ];
+        then
+          echo "Platform API call failed with error: '$response'"
+          exit 1
+        fi
+        
+        # If successful, show the response nicely
+        echo ""
+        echo "Platform API success response:"
+        echo "$response" | python3 -m json.tool || echo "$response"
+        
+        # Extract the details from the response
+        name=$(echo "$response" | grep -o '"name": *"[^"]*"' | sed 's/.*"name": *"\([^"]*\)".*/\1/')
+        version=$(echo "$response" | grep -o '"version": *"[^"]*"' | sed 's/.*"version": *"\([^"]*\)".*/\1/')
+        url=$(echo "$response" | grep -o '"url": *"[^"]*"' | sed 's/.*"url": *"\([^"]*\)".*/\1/')
+        digest=$(echo "$response" | grep -o '"digest": *"[^"]*"' | sed 's/.*"digest": *"\([^"]*\)".*/\1/')
+        
+        # Set it as an output
+        printf %s "$name" > $CLOUDBEES_OUTPUTS/name
+        printf %s "$version" > $CLOUDBEES_OUTPUTS/version
+        printf %s "$url" > $CLOUDBEES_OUTPUTS/url
+        printf %s "$digest" > $CLOUDBEES_OUTPUTS/digest
+
+      env:
+        JWT: ${{ cloudbees.api.token }}
+        URL: ${{ cloudbees.api.url }}
+        INPUT_ARTIFACT_ID: ${{ inputs.artifact-id }}
