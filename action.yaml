@@ -38,7 +38,7 @@ runs:
         
         # Make Platform API call to get artifact details
         response=$(curl --silent --show-error --fail-with-body \
-          -X 'POST' "$URL/v3/artifactinfos/$INPUT_ARTIFACT_ID" \
+          -X 'GET' "$URL/v3/artifactinfos/$INPUT_ARTIFACT_ID" \
           -H "Authorization: Bearer $JWT" \
           -H 'Content-Type: application/json' \
           --data-binary '@/tmp/payload.json') || command_failed=1
