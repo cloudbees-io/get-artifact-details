@@ -56,16 +56,16 @@ runs:
         echo "$response" | python3 -m json.tool || echo "$response"
         
         # Extract the details from the response
-        name=$(echo "$response" | grep -o '"name": *"[^"]*"' | sed 's/.*"name": *"\([^"]*\)".*/\1/')
-        version=$(echo "$response" | grep -o '"version": *"[^"]*"' | sed 's/.*"version": *"\([^"]*\)".*/\1/')
-        url=$(echo "$response" | grep -o '"url": *"[^"]*"' | sed 's/.*"url": *"\([^"]*\)".*/\1/')
-        digest=$(echo "$response" | grep -o '"digest": *"[^"]*"' | sed 's/.*"digest": *"\([^"]*\)".*/\1/')
+        aName=$(echo "$response" | grep -o '"name": *"[^"]*"' | sed 's/.*"name": *"\([^"]*\)".*/\1/')
+        aVersion=$(echo "$response" | grep -o '"version": *"[^"]*"' | sed 's/.*"version": *"\([^"]*\)".*/\1/')
+        aUrl=$(echo "$response" | grep -o '"url": *"[^"]*"' | sed 's/.*"url": *"\([^"]*\)".*/\1/')
+        aDigest=$(echo "$response" | grep -o '"digest": *"[^"]*"' | sed 's/.*"digest": *"\([^"]*\)".*/\1/')
         
         # Set it as an output
-        printf %s "$name" > $CLOUDBEES_OUTPUTS/name
-        printf %s "$version" > $CLOUDBEES_OUTPUTS/version
-        printf %s "$url" > $CLOUDBEES_OUTPUTS/url
-        printf %s "$digest" > $CLOUDBEES_OUTPUTS/digest
+        printf %s "$aName" > $CLOUDBEES_OUTPUTS/name
+        printf %s "$aVersion" > $CLOUDBEES_OUTPUTS/version
+        printf %s "$aUrl" > $CLOUDBEES_OUTPUTS/url
+        printf %s "$aDigest" > $CLOUDBEES_OUTPUTS/digest
 
       env:
         JWT: ${{ cloudbees.api.token }}
