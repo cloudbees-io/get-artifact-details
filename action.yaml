@@ -45,20 +45,13 @@ runs:
         # If successful, show the response nicely
         echo ""
         echo "Platform API success response:"
-        echo "$response" > /tmp/response.json
-        cat /tmp/response.json
-        #echo "$response" | python3 -m json.tool || echo "$response"
+        echo "$response" | python3 -m json.tool || echo "$response"
         
         # Extract the details from the response
-        #aName=$(echo "$response" | grep -o '"name": *"[^"]*"' | sed 's/.*"name": *"\([^"]*\)".*/\1/')
-        #aVersion=$(echo "$response" | grep -o '"version": *"[^"]*"' | sed 's/.*"version": *"\([^"]*\)".*/\1/')
-        #aUrl=$(echo "$response" | grep -o '"url": *"[^"]*"' | sed 's/.*"url": *"\([^"]*\)".*/\1/')
-        #aDigest=$(echo "$response" | grep -o '"digest": *"[^"]*"' | sed 's/.*"digest": *"\([^"]*\)".*/\1/')
-        
-        aName=$(jq -r '.name' /tmp/response.json)
-        aVersion=$(jq -r '.version' /tmp/response.json)
-        aUrl=$(jq -r '.url' /tmp/response.json)
-        aDigest=$(jq -r '.digest' /tmp/response.json)
+        aName=$(echo "$response" | grep -o '"name": *"[^"]*"' | sed 's/.*"name": *"\([^"]*\)".*/\1/')
+        aVersion=$(echo "$response" | grep -o '"version": *"[^"]*"' | sed 's/.*"version": *"\([^"]*\)".*/\1/')
+        aUrl=$(echo "$response" | grep -o '"url": *"[^"]*"' | sed 's/.*"url": *"\([^"]*\)".*/\1/')
+        aDigest=$(echo "$response" | grep -o '"digest": *"[^"]*"' | sed 's/.*"digest": *"\([^"]*\)".*/\1/')
         
         # Set it as an output
         printf %s "$aName" > $CLOUDBEES_OUTPUTS/name
