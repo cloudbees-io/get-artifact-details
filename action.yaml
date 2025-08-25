@@ -29,19 +29,11 @@ runs:
       name: Get Artifact Details
       uses: docker://esolang/jq:latest
       run: |
-        # Create the payload JSON file
-        echo '{ "artifactId": "'"$INPUT_ARTIFACT_ID"'" }' > /tmp/payload.json 
-
-        # Display the generated payload
-        echo "Request payload:"
-        python3 -m json.tool /tmp/payload.json
-        
         # Make Platform API call to get artifact details
         response=$(curl --silent --show-error --fail-with-body \
           -X 'GET' "$URL/v3/artifactinfos/$INPUT_ARTIFACT_ID" \
           -H "Authorization: Bearer $JWT" \
-          -H 'Content-Type: application/json' \
-          --data-binary '@/tmp/payload.json') || command_failed=1
+          -H 'Content-Type: application/json') || command_failed=1
         
         # Check if the API call failed
         if [ ${command_failed:-0} -eq 1 ];
