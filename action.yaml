@@ -11,16 +11,16 @@ inputs:
 outputs:
   name:
     value: ${{ steps.getArtifactDetails.outputs.name }}
-    description: 'The name of the artifact.'
+    description: 'The name of the artifact reported to the CloudBees platform.'
   version:
     value: ${{ steps.getArtifactDetails.outputs.version }}
-    description: 'The version of the artifact.'
+    description: 'The version of the artifact reported to the CloudBees platform.'
   url:
     value: ${{ steps.getArtifactDetails.outputs.url }}
-    description: 'The url where the artifact version is located.'
+    description: 'The URL where the artifact version is located. For example, "docker.io/myapp/myimg:1.0.0".'
   digest:
     value: ${{ steps.getArtifactDetails.outputs.digest }}
-    description: 'The artifact digest that uniquely and immutably identifies the artifact.'
+    description: 'The hash or checksum that uniquely identifies the artifact version.'
 
 runs:
   using: composite
@@ -66,7 +66,6 @@ runs:
         printf %s "$aVersion" > $CLOUDBEES_OUTPUTS/version
         printf %s "$aUrl" > $CLOUDBEES_OUTPUTS/url
         printf %s "$aDigest" > $CLOUDBEES_OUTPUTS/digest
-
       env:
         JWT: ${{ cloudbees.api.token }}
         URL: ${{ cloudbees.api.url }}

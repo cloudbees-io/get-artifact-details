@@ -1,1 +1,23 @@
-
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: workflow
+name: get_artifact_details
+on:
+  workflow_dispatch:
+jobs:
+  getArtifactDetailsAndPrint:
+    steps:
+      - name: Get Artifact Details
+        id: getArtifactDetails
+        uses: cloudbees-io/get-artifact-details@v1
+        with:
+          artifact-id: ea07033d-3008-40ec-9e50-a0efce7493d8
+      - name: Print artifact details
+        id: printArtifactDetails
+        uses: docker://golang:1.20.3-alpine3.17
+        shell: sh
+        run: |
+          echo "Output from getArtifactDetails: "
+          echo "name: ${{ steps.getArtifactDetails.outputs.name }}"
+          echo "version: ${{ steps.getArtifactDetails.outputs.version }}"
+          echo "url: ${{ steps.getArtifactDetails.outputs.url }}"
+          echo "digest: ${{ steps.getArtifactDetails.outputs.digest }}"
