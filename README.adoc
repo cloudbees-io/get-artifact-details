@@ -1,11 +1,10 @@
-= CloudBees action: Register a build artifact
+= CloudBees action: Get artifact details
 
-Use this action to get artifact version details from the CloudBees platform.
-The basic details of the artifact version like name, version, URL and digest are the outputs of this action.
+Use this action to retrieve an artifact's name, version, URL, and unique digest, using the artifact ID output from CloudBees platform.
 
 == Inputs
 
-[cols="15%a,10%a,30%a,45%a",options="header"]
+[cols="2a,1a,1a,3a",options="header"]
 .Input details
 |===
 
@@ -17,17 +16,13 @@ The basic details of the artifact version like name, version, URL and digest are
 | `artifact-id`
 | String
 | Yes
-| The unique identifier of the artifact.
+| The unique identifier of the artifact ID output from CloudBees platform.
 
 |===
 
-[#footnote]
-^[1]^ By default, the CloudBees platform associates the artifact version with the code commit associated with the workflow run in the workflow's repository/branch.
-If a different commit/repository/branch has been checked out for building the artifact, specify that commit ID instead.
-
 == Outputs
 
-[cols="2a,1a,3a",options="header"]
+[cols="2a,1a,4a",options="header"]
 .Output details
 |===
 | Output name
@@ -36,11 +31,11 @@ If a different commit/repository/branch has been checked out for building the ar
 
 | `name`
 | String
-| The name of the artifact reported to the CloudBees platform.
+| The name of the artifact reported to CloudBees platform.
 
 | `version`
 | String
-| The version of the artifact reported to the CloudBees platform.
+| The version of the artifact reported to CloudBees platform.
 
 | `url`
 | String
@@ -54,7 +49,6 @@ For example, `docker.io/myapp/myimg:1.0.0`.
 
 |===
 
-
 == Usage examples
 
 === Basic example
@@ -63,21 +57,15 @@ The following is a basic example of using the action:
 
 [source,yaml]
 ----
-jobs:
-  register_build_artifact:
-      uses: cloudbees-io/get-artifact-details@v1
-      with:
-        artifact-id: "artifact-12345"
+      - name: get-details
+        uses: cloudbees-io/get-artifact-details@v1
+        with:
+          artifact-id: 1234abcd-56ef-ab78-9012-cdef78903456
 ----
 
 === Full workflow example
 
-The following workflow example uses the action to fetch artifact details and print them.
-Then it prints the name, version, URL and digest output parameters.
-
-.Example platform workflow YAML file
-[.collapsible]
---
+The following workflow example uses the action to fetch and print the details for an artifact.
 
 [source,yaml,role="default-expanded"]
 ----
@@ -91,11 +79,11 @@ on:
 jobs:
   getArtifactDetailsAndPrint:
     steps:
-      - name: Get Artifact Details
+      - name: Get artifact details
         id: getArtifactDetails
         uses: cloudbees-io/get-artifact-details@v1
         with:
-          artifact-id: ea07033d-3008-40ec-9e50-a0efce7493d8
+          artifact-id: 1234abcd-56ef-ab78-9012-cdef78903456
       - name: Print artifact details
         id: printArtifactDetails
         uses: docker://golang:1.20.3-alpine3.17
@@ -107,7 +95,6 @@ jobs:
           echo "url: ${{ steps.getArtifactDetails.outputs.url }}"
           echo "digest: ${{ steps.getArtifactDetails.outputs.digest }}"
 ----
---
 
 == License
 
@@ -117,4 +104,4 @@ link:https://opensource.org/license/mit/[MIT license].
 == References
 
 * Learn more about link:https://docs.cloudbees.com/docs/cloudbees-saas-platform-actions/latest/[using actions in CloudBees workflows].
-* Learn about link:https://docs.cloudbees.com/docs/cloudbees-saas-platform/latest/[the CloudBees platform].
+* Learn about link:https://docs.cloudbees.com/docs/cloudbees-saas-platform/latest/[CloudBees platform].
