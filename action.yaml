@@ -5,16 +5,16 @@ description: 'Get artifact version details.'
 
 inputs:
   artifact-id:
-    description: "The unique identifier of the artifact."
+    description: "The unique identifier of the artifact ID output from CloudBees platform."
     required: true
 
 outputs:
   name:
     value: ${{ steps.getArtifactDetails.outputs.name }}
-    description: 'The name of the artifact reported to the CloudBees platform.'
+    description: 'The name of the artifact reported to CloudBees platform.'
   version:
     value: ${{ steps.getArtifactDetails.outputs.version }}
-    description: 'The version of the artifact reported to the CloudBees platform.'
+    description: 'The version of the artifact reported to CloudBees platform.'
   url:
     value: ${{ steps.getArtifactDetails.outputs.url }}
     description: 'The URL where the artifact version is located. For example, "docker.io/myapp/myimg:1.0.0".'
