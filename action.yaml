@@ -30,6 +30,7 @@ runs:
       uses: docker://esolang/jq:latest
       run: |
         # Make Platform API call to get artifact details
+        echo "Calling: $URL/v3/artifactinfos/$INPUT_ARTIFACT_ID"
         response=$(curl --silent --show-error --fail-with-body \
           -X 'GET' "$URL/v3/artifactinfos/$INPUT_ARTIFACT_ID" \
           -H "Authorization: Bearer $JWT" \
