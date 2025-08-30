@@ -31,11 +31,11 @@ runs:
       run: |
         # Make Platform API call to get artifact details
         echo "1 $INPUT_ARTIFACT_ID"
-        echo '2 $INPUT_ARTIFACT_ID'
-        echo "3 ${{ inputs.artifact-id }}"
-        echo "Calling: $URL/v3/artifactinfos/$INPUT_ARTIFACT_ID"
+        echo "2 ${{ inputs.artifact-id }}"
+        echo "Url1 does not work: $URL/v3/artifactinfos/$INPUT_ARTIFACT_ID"
+        echo "Url2 works: $URL/v3/artifactinfos/${{ inputs.artifact-id }}"
         response=$(curl --silent --show-error --fail-with-body \
-          -X 'GET' "$URL/v3/artifactinfos/$INPUT_ARTIFACT_ID" \
+          -X 'GET' "$URL/v3/artifactinfos/${{ inputs.artifact-id }}" \
           -H "Authorization: Bearer $JWT" \
           -H 'Content-Type: application/json') || command_failed=1
         
