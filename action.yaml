@@ -29,6 +29,14 @@ runs:
       name: Get Artifact Details
       uses: docker://esolang/jq:latest
       run: |
+        
+        # Print the inputs in a formatted table
+        echo "+----------------------+----------------------------------------------------+"
+        printf "| \033[1m%-20s\033[0m | \033[1m%-50s\033[0m |\n" "Parameter" "Value"
+        echo "+----------------------+----------------------------------------------------+"
+        printf "| \033[1m%-20s\033[0m | %-50s |\n" "artifact-id" "$INPUT_ARTIFACT_ID"
+        echo "+----------------------+----------------------------------------------------+"   
+        
         # Make Platform API call to get artifact details
         response=$(curl --silent --show-error --fail-with-body \
           -X 'GET' "$URL/v3/artifactinfos/$INPUT_ARTIFACT_ID" \
