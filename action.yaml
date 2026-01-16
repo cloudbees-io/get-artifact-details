@@ -53,7 +53,7 @@ runs:
         # If successful, show the response nicely
         echo ""
         echo "Platform API success response:"
-        echo "$response" | python3 -m json.tool || echo "$response"
+        echo "$response" | jq . || echo "$response"
         
         # Extract the details from the response
         aName=$(echo "$response" | grep -o '"name": *"[^"]*"' | sed 's/.*"name": *"\([^"]*\)".*/\1/')
