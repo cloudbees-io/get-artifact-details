@@ -13,7 +13,7 @@ jobs:
           artifact-id: ea07033d-3008-40ec-9e50-a0efce7493d8
       - name: Print artifact details
         id: printArtifactDetails
-        uses: docker://golang:1.20.3-alpine3.17
+        uses: docker://alpine:3.23.2
         shell: sh
         run: |
           echo "Output from getArtifactDetails: "
