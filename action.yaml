@@ -38,10 +38,16 @@ runs:
         echo "+----------------------+----------------------------------------------------+"
         
         # Make Platform API call to get artifact details
-        response=$(curl --silent --show-error --fail-with-body \
+
+        response_file=$(mktemp)
+        http_time=$(curl --silent --show-error --fail-with-body \
           -X 'GET' "$URL/v3/artifactinfos/$INPUT_ARTIFACT_ID" \
           -H "Authorization: Bearer $JWT" \
-          -H 'Content-Type: application/json') || command_failed=1
+          -H 'Content-Type: application/json') -o "$response_file" \
+          -w "%{time_total}") || command_failed=1
+
+        response=$(cat "$response_file")
+        rm "$response_file"
         
         # Check if the API call failed
         if [ ${command_failed:-0} -eq 1 ];
