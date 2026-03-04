@@ -43,11 +43,14 @@ runs:
         http_time=$(curl --silent --show-error --fail-with-body \
           -X 'GET' "$URL/v3/artifactinfos/$INPUT_ARTIFACT_ID" \
           -H "Authorization: Bearer $JWT" \
-          -H 'Content-Type: application/json') -o "$response_file" \
+          -H 'Content-Type: application/json' \
+          -o "$response_file" \
           -w "%{time_total}") || command_failed=1
 
         response=$(cat "$response_file")
         rm "$response_file"
+
+        echo "Time taken: $http_time"
         
         # Check if the API call failed
         if [ ${command_failed:-0} -eq 1 ];
