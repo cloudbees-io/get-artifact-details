@@ -46,6 +46,9 @@ For example, `docker.io/myapp/myimg:1.0.0`.
 | String
 | The hash or checksum that uniquely identifies the artifact version.
 
+| `raw-artifact-data`
+| String
+| The raw JSON response of the CloudBees platform API for the artifact version.
 
 |===
 

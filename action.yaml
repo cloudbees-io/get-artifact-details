@@ -21,6 +21,9 @@ outputs:
   digest:
     value: ${{ steps.getArtifactDetails.outputs.digest }}
     description: 'The hash or checksum that uniquely identifies the artifact version.'
+  raw-artifact-data:
+    value: ${{ steps.getArtifactDetails.outputs.raw-artifact-data }}
+    description: 'The raw JSON response of the CloudBees platform API for the artifact version.'
 
 runs:
   using: composite
@@ -66,6 +69,7 @@ runs:
         printf %s "$aVersion" > $CLOUDBEES_OUTPUTS/version
         printf %s "$aUrl" > $CLOUDBEES_OUTPUTS/url
         printf %s "$aDigest" > $CLOUDBEES_OUTPUTS/digest
+        printf %s "$response" > "$CLOUDBEES_OUTPUTS/raw-artifact-data"
       env:
         JWT: ${{ cloudbees.api.token }}
         URL: ${{ cloudbees.api.url }}
